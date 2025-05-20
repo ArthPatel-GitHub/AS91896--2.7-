@@ -4,7 +4,16 @@
 
 {% block content %}
 <div class="auth-box">
-    <h1>Login Page Placeholder</h1>
-    <p>This is where the login form will go.</p>
+    <h1>Movie Login</h1>
+    <form method="POST" action="#"> {# action is placeholder for now #}
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <input type="submit" value="Login">
+    </form>
+    {# The "Don't have an account?" link will be added in a later commit #}
 </div>
 {% endblock %}
