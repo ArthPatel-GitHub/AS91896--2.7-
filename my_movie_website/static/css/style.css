@@ -30,7 +30,7 @@ body {
     100% { background-position: 0% 50%; }
 }
 
-/* New CSS for the login box and container */
+/* Existing CSS for the login box and container */
 .container {
     position: relative; /* To ensure it's above the background */
     z-index: 1;
@@ -62,13 +62,15 @@ label {
 }
 
 input[type="text"],
-input[type="password"] {
-    width: calc(100% - 22px); /* Account for padding */
+input[type="password"],
+input[type="email"],
+input[type="date"] { /* NEW: Added input[type="date"] */
+    width: calc(100% - 22px);
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    box-sizing: border-box; /* Important for width calculation */
+    box-sizing: border-box;
 }
 
 input[type="submit"] {
@@ -85,4 +87,21 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     background-color: #4cae4c;
+}
+
+/* Auth switch links */
+.auth-switch {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #333; /* Sets the text color back to dark gray */
+}
+
+.auth-switch a {
+    color: #5cb85c; /* Green color for links */
+    text-decoration: none;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
 }

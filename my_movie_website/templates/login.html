@@ -14,6 +14,6 @@
 
         <input type="submit" value="Login">
     </form>
-    {# The "Don't have an account?" link will be added in a later commit #}
+    <p class="auth-switch">Don't have an account? <a href="{{ url_for('signup') }}">Sign Up here</a></p> {# NEW LINE #}
 </div>
 {% endblock %}

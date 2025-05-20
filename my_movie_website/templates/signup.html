@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - Movie App{% endblock %}
+
+{% block content %}
+<div class="auth-box">
+    <h1>Create Account</h1>
+    <form method="POST" action="#"> {# Action is placeholder for now #}
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required placeholder="e.g., MovieFan123">
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required placeholder="e.g., user@example.com">
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" required> {# Date input doesn't typically use placeholders #}
+
+        <label for="phone">Phone Number (Optional):</label> {# REINTRODUCED FIELD #}
+        <input type="text" id="phone" name="phone" placeholder="e.g., +64 21 123 4567"> {# Added placeholder, no 'required' #}
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required placeholder="Min. 8 characters">
+
+        <label for="confirm_password">Confirm Password:</label>
+        <input type="password" id="confirm_password" name="confirm_password" required placeholder="Re-enter your password">
+
+        <input type="submit" value="Sign Up">
+    </form>
+    <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+</div>
+{% endblock %}
