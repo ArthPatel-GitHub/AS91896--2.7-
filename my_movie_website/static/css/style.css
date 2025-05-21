@@ -3,22 +3,22 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    color: #eee; /* Light color for general text on dark background */
-    overflow: hidden; /* Hide scrollbars caused by pseudo-element */
+    color: #eee;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    position: relative; /* For pseudo-element positioning */
+    position: relative;
 }
 
 .background-animation {
-    position: fixed; /* Cover the whole viewport */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1; /* Behind all other content */
+    z-index: -1;
     background: linear-gradient(45deg, #1a1a1a, #2b2b2b, #1a1a1a, #3c3c3c);
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
@@ -30,47 +30,61 @@ body {
     100% { background-position: 0% 50%; }
 }
 
-/* Existing CSS for the login box and container */
 .container {
-    position: relative; /* To ensure it's above the background */
+    position: relative;
     z-index: 1;
-    text-align: center; /* Helps in centering inline-block elements */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .auth-box {
-    background-color: rgba(255, 255, 255, 0.95); /* White box with slight transparency */
-    padding: 30px 40px;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 20px 25px 25px 25px;
     border-radius: 10px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    width: 350px; /* Or max-width as preferred */
-    margin: 20px auto; /* Centers the block element */
-    display: inline-block; /* Allows vertical centering via flexbox on body if used */
-    text-align: left; /* Align text inside the box to the left */
+    width: 300px;
+    max-width: 90%;
+    margin: auto;
+    text-align: left;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
-h1 {
-    color: #333; /* Darker color for text inside the white box */
+
+.form-title {
+    color: #000;
     text-align: center;
-    margin-bottom: 25px;
+    margin: 30px 0 25px 0; /* ⬅️ pushes it down within the box */
+    font-size: 1.5em;
+    line-height: 1.2;
 }
 
 label {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
-    color: #555; /* Slightly lighter dark for labels */
+    color: #000;
 }
 
 input[type="text"],
 input[type="password"],
 input[type="email"],
-input[type="date"] { /* NEW: Added input[type="date"] */
+input[type="date"] {
     width: calc(100% - 22px);
     padding: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* Slightly reduced for tighter form spacing */
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
+    font-size: 1em;
+    color: #000;
 }
 
 input[type="submit"] {
@@ -80,7 +94,7 @@ input[type="submit"] {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1.1em;
     width: 100%;
     transition: background-color 0.3s ease;
 }
@@ -89,19 +103,105 @@ input[type="submit"]:hover {
     background-color: #4cae4c;
 }
 
-/* Auth switch links */
 .auth-switch {
     text-align: center;
     margin-top: 20px;
     font-size: 0.9em;
-    color: #333; /* Sets the text color back to dark gray */
+    color: #000;
 }
 
 .auth-switch a {
-    color: #5cb85c; /* Green color for links */
+    color: #5cb85c;
     text-decoration: none;
+    font-weight: bold;
 }
 
 .auth-switch a:hover {
+    text-decoration: underline;
+}
+
+.flash-messages-container {
+    width: 100%;
+    max-width: 450px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.alert {
+    padding: 15px;
+    margin: 10px 0;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-weight: bold;
+    word-wrap: break-word;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.alert-info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+/* Refined login-error-box (no forced extra height) */
+.login-error-box {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    color: #b30000;
+    background-color: #ffebee;
+    border: 1px solid #e57373;
+    padding: 12px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+/* Welcome options */
+.welcome-option {
+    display: inline-block;
+    background-color: #5cb85c;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.welcome-option:hover {
+    background-color: #4cae4c;
+}
+
+.welcome-box p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    text-align: center;
+    color: #000;
+}
+
+.welcome-box a {
+    color: #d9534f;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.welcome-box a:hover {
     text-decoration: underline;
 }

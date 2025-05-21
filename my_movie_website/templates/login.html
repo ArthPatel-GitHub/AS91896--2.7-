@@ -4,16 +4,28 @@
 
 {% block content %}
 <div class="auth-box">
-    <h1>Movie Login</h1>
-    <form method="POST" action="#"> {# action is placeholder for now #}
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+    <h1 class="form-title">Movie Login</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} login-error-box" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('login') }}">
+        <label for="identifier">Email or Phone Number:</label>
+        <input type="text" id="identifier" name="identifier" required placeholder="Your email or phone number" value="{{ identifier or '' }}">
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password" required placeholder="Your password">
 
         <input type="submit" value="Login">
     </form>
-    <p class="auth-switch">Don't have an account? <a href="{{ url_for('signup') }}">Sign Up here</a></p> {# NEW LINE #}
+
+    <p class="auth-switch">Don't have an account? <a href="{{ url_for('signup') }}">Sign Up here</a></p>
 </div>
 {% endblock %}

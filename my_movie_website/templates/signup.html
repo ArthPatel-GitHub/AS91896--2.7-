@@ -5,18 +5,18 @@
 {% block content %}
 <div class="auth-box">
     <h1>Create Account</h1>
-    <form method="POST" action="#"> {# Action is placeholder for now #}
+    <form method="POST" action="{{ url_for('signup') }}">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required placeholder="e.g., MovieFan123">
+        <input type="text" id="username" name="username" required placeholder="e.g., MovieFan123" value="{{ username or '' }}">
 
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required placeholder="e.g., user@example.com">
+        <input type="email" id="email" name="email" required placeholder="e.g., user@example.com" value="{{ email or '' }}">
 
         <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob" name="dob" required> {# Date input doesn't typically use placeholders #}
+        <input type="date" id="dob" name="dob" required value="{{ dob or '' }}">
 
-        <label for="phone">Phone Number (Optional):</label> {# REINTRODUCED FIELD #}
-        <input type="text" id="phone" name="phone" placeholder="e.g., +64 21 123 4567"> {# Added placeholder, no 'required' #}
+        <label for="phone">Phone Number (Optional):</label>
+        <input type="text" id="phone" name="phone" placeholder="e.g., +64211234567 or 0211234567" value="{{ phone or '' }}"> {# UPDATED PLACEHOLDER #}
 
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required placeholder="Min. 8 characters">
