@@ -4,14 +4,13 @@
 
 {% block content %}
 <div class="auth-box">
-    <h1>Welcome, {{ username }}!</h1>
-    <p>You have successfully logged into the Movie App.</p>
-
-    <div style="margin-top: 30px; text-align: center;">
-        <p><strong>What would you like to do?</strong></p>
-        <a href="#" class="welcome-option">➡️ Continue to Main Page</a><br><br>
-        <a href="{{ url_for('account') }}" class="welcome-option">👤 View Account Information</a><br><br>
-        <a href="{{ url_for('logout') }}" class="welcome-option">🚪 Logout</a>
-    </div>
+    <h1>Redirecting...</h1>
+    <p>You have successfully logged in. Redirecting you to the main content area.</p>
 </div>
+<script>
+    // Redirect after a short delay for the flash message to be seen
+    setTimeout(function() {
+        window.location.href = "{{ url_for('placeholder_main_page') }}";
+    }, 1500); // 1.5 seconds delay
+</script>
 {% endblock %}

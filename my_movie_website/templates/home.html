@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to Movie App - Teaser{% endblock %}
+
+{% block content %}
+<div class="auth-box home-teaser-box"> {# Use auth-box for consistent styling #}
+    <h1 class="form-title">Your Ultimate Movie Experience Awaits!</h1>
+    <p class="teaser-text">
+        Explore a world of blockbusters, indie gems, and timeless classics.
+        Here's a sneak peek at some of the best movies we have:
+    </p>
+
+    <div class="movie-carousel-grid">
+        {% for movie in movies %}
+        <div class="movie-card">
+            {# FINAL: Image source now uses url_for to find static files #}
+            <img src="{{ url_for('static', filename='images/movies/' + movie.image_filename) }}" alt="{{ movie.title }}">
+            <p class="movie-title">{{ movie.title }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="call-to-action-box">
+        <h2>Unlock the Full Potential!</h2>
+        <p>Create an account to track your favorites, get personalized recommendations, and dive deeper into the world of cinema.</p>
+        <a href="{{ url_for('signup') }}" class="cta-button">Join Now - It's Free!</a>
+        <p class="already-member">Already a member? <a href="{{ url_for('login') }}">Log In</a></p>
+    </div>
+</div>
+
+{# Footer - placed outside auth-box but still within the main content flow #}
+<footer class="site-footer">
+    <p>&copy; 2025 Your Name (Made by Your Name) | All Rights Reserved</p>
+</footer>
+
+{% endblock %}

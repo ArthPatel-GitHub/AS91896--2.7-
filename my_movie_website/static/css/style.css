@@ -3,13 +3,15 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    color: #eee;
-    overflow: hidden;
+    color: #eee; /* Light color for general text on dark background */
+    overflow-x: hidden; /* Prevent horizontal scrollbar from carousel */
     display: flex;
-    justify-content: center;
+    flex-direction: column; /* Allow content and footer to stack */
+    justify-content: flex-start; /* Align content to the top */
     align-items: center;
     min-height: 100vh;
     position: relative;
+    background-color: #1a1a1a; /* Fallback for black background */
 }
 
 .background-animation {
@@ -30,63 +32,73 @@ body {
     100% { background-position: 0% 50%; }
 }
 
+/* Base container for all main content, helps with centering */
 .container {
     position: relative;
     z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start; /* Align content to the top within container */
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
+    flex-grow: 1; /* Allow container to grow and push footer down */
 }
 
+/* Styles for authentication boxes (login, signup, welcome) */
 .auth-box {
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 20px 25px 25px 25px;
+    background-color: rgba(255, 255, 255, 0.95); /* White box with slight transparency */
+    padding: 30px 40px;
     border-radius: 10px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    width: 300px;
-    max-width: 90%;
-    margin: auto;
-    text-align: left;
-    color: #000;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    width: 350px;
+    max-width: 90%; /* Responsive width */
+    margin: 20px auto; /* Centers the block element and adds vertical spacing */
+    text-align: left; /* Align text inside the box to the left */
+    color: #333; /* Default text color for auth-box content */
 }
 
-
-.form-title {
-    color: #000;
+/* Styling for main headings within auth boxes */
+h1 {
+    color: #333; /* Darker color for text inside the white box */
     text-align: center;
-    margin: 30px 0 25px 0; /* ⬅️ pushes it down within the box */
-    font-size: 1.5em;
-    line-height: 1.2;
+    margin-bottom: 25px;
+    font-size: 1.8em;
 }
 
+/* Specific style for login/signup form titles to avoid conflict with home page H1 */
+.form-title {
+    color: #333;
+    text-align: center;
+    margin: 0 0 25px 0; /* Reset margin from general h1 */
+    font-size: 1.8em;
+}
+
+/* Styling for form labels */
 label {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
-    color: #000;
+    color: #555; /* Slightly lighter dark for labels */
 }
 
+/* Styling for various input types */
 input[type="text"],
 input[type="password"],
 input[type="email"],
 input[type="date"] {
-    width: calc(100% - 22px);
+    width: calc(100% - 22px); /* Account for padding and border */
     padding: 10px;
-    margin-bottom: 15px; /* Slightly reduced for tighter form spacing */
+    margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    box-sizing: border-box;
-    font-size: 1em;
-    color: #000;
+    box-sizing: border-box; /* Include padding/border in element's total width/height */
+    font-size: 1em; /* Make text readable */
+    color: #333; /* Ensure input text is dark */
 }
 
+/* Styling for submit buttons */
 input[type="submit"] {
     background-color: #5cb85c;
     color: white;
@@ -103,15 +115,16 @@ input[type="submit"]:hover {
     background-color: #4cae4c;
 }
 
+/* Auth switch links */
 .auth-switch {
     text-align: center;
     margin-top: 20px;
     font-size: 0.9em;
-    color: #000;
+    color: #333; /* Sets the text color to dark gray */
 }
 
 .auth-switch a {
-    color: #5cb85c;
+    color: #5cb85c; /* Green color for links */
     text-decoration: none;
     font-weight: bold;
 }
@@ -120,20 +133,24 @@ input[type="submit"]:hover {
     text-decoration: underline;
 }
 
+/* Flash messages styling */
+/* Base.html's container for non-danger alerts */
 .flash-messages-container {
     width: 100%;
     max-width: 450px;
+    margin-top: 20px; /* Space from top */
     margin-bottom: 20px;
     text-align: center;
 }
 
 .alert {
     padding: 15px;
-    margin: 10px 0;
+    margin: 10px auto; /* Center alerts themselves */
     border: 1px solid transparent;
     border-radius: 4px;
     font-weight: bold;
     word-wrap: break-word;
+    max-width: 90%; /* Responsive width for alerts */
 }
 
 .alert-success {
@@ -143,7 +160,7 @@ input[type="submit"]:hover {
 }
 
 .alert-danger {
-    color: #721c24;
+    color: #721c24; /* Original dark red for generic danger messages */
     background-color: #f8d7da;
     border-color: #f5c6cb;
 }
@@ -160,48 +177,155 @@ input[type="submit"]:hover {
     border-color: #bee5eb;
 }
 
-/* Refined login-error-box (no forced extra height) */
+/* Login-specific error box styling (from login.html) */
 .login-error-box {
     width: 100%;
     box-sizing: border-box;
     text-align: center;
-    color: #b30000;
-    background-color: #ffebee;
-    border: 1px solid #e57373;
+    color: #b30000; /* A stronger, darker red to ensure visibility */
+    background-color: #ffebee; /* Very light red background to contrast */
+    border: 1px solid #e57373; /* A more visible border */
     padding: 12px;
     border-radius: 5px;
-    margin-bottom: 15px;
+    margin-bottom: 15px; /* Space between the error box and the form title */
 }
 
-/* Welcome options */
-.welcome-option {
-    display: inline-block;
-    background-color: #5cb85c;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-}
-
-.welcome-option:hover {
-    background-color: #4cae4c;
-}
-
+/* Welcome box specific styling */
 .welcome-box p {
     font-size: 1.1em;
     line-height: 1.6;
     text-align: center;
-    color: #000;
+    color: #333;
 }
-
 .welcome-box a {
     color: #d9534f;
     text-decoration: none;
     font-weight: bold;
 }
-
 .welcome-box a:hover {
     text-decoration: underline;
+}
+
+/* Home Teaser Box Specific Styling */
+.home-teaser-box {
+    width: 800px; /* Wider box for the home page */
+    max-width: 95%; /* Responsive */
+    padding: 40px; /* More padding */
+    text-align: center; /* Center content within this box */
+}
+
+.home-teaser-box .teaser-text {
+    font-size: 1.1em;
+    margin-bottom: 30px;
+    color: #555;
+}
+
+/* Movie Carousel Grid */
+.movie-carousel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Responsive grid for images */
+    gap: 15px; /* Space between images */
+    padding: 20px 0;
+    margin-bottom: 30px;
+    max-height: 400px; /* Limit height to create a "carousel" feel (will be scrollable) */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    border: 1px solid #eee; /* Light border around the carousel area */
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.02); /* Very subtle dark background for carousel */
+}
+
+.movie-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.movie-card img {
+    width: 100px; /* Fixed width for images */
+    height: 150px; /* Fixed height for consistent look */
+    object-fit: cover; /* Ensures images cover the area without distortion */
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.movie-card img:hover {
+    transform: scale(1.05); /* Slight zoom on hover */
+}
+
+.movie-card .movie-title {
+    font-size: 0.8em;
+    color: #444; /* Slightly darker text for titles */
+    margin-top: 8px;
+    font-weight: bold;
+    word-wrap: break-word; /* Allow long titles to wrap */
+    max-width: 100px; /* Match image width */
+}
+
+/* Call to Action Box */
+.call-to-action-box {
+    background-color: #f0f8ff; /* Light blue background for CTA */
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #cceeff;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.call-to-action-box h2 {
+    color: #2196F3; /* Blue for CTA heading */
+    margin-bottom: 15px;
+    font-size: 1.6em;
+}
+
+.call-to-action-box p {
+    color: #444;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: #2196F3; /* Bright blue for CTA button */
+    color: white;
+    padding: 12px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #1976D2;
+}
+
+.already-member {
+    margin-top: 15px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.already-member a {
+    color: #5cb85c; /* Green for login link */
+    text-decoration: none;
+    font-weight: bold;
+}
+.already-member a:hover {
+    text-decoration: underline;
+}
+
+/* Footer Styling */
+.site-footer {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px; /* Space from content above */
+    color: #888; /* Lighter grey for footer text */
+    font-size: 0.8em;
+    border-top: 1px solid rgba(255, 255, 255, 0.05); /* Subtle white line at the top */
+    position: relative; /* Ensure it stays at the bottom */
+    z-index: 1; /* Keep it above the background animation */
 }

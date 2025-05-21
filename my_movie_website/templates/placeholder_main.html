@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Main Content - Movie App{% endblock %}
+
+{% block content %}
+<div class="auth-box">
+    <h1>Welcome, {{ username }}!</h1>
+    <p>You've unlocked the main content area.</p>
+    <p>This is where your full movie Browse, search, and personalized features will eventually go!</p>
+    <p style="margin-top: 20px;">For now, feel free to <a href="{{ url_for('logout') }}">Logout</a> or <a href="{{ url_for('account') }}">View Account</a>.</p>
+</div>
+{% endblock %}
