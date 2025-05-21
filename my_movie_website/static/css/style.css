@@ -1,331 +1,294 @@
 /* static/css/style.css */
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom right, #1a1a1a, #0d0d0d, #000000);
+    background-attachment: fixed;
     margin: 0;
     padding: 0;
-    color: #eee; /* Light color for general text on dark background */
-    overflow-x: hidden; /* Prevent horizontal scrollbar from carousel */
     display: flex;
-    flex-direction: column; /* Allow content and footer to stack */
-    justify-content: flex-start; /* Align content to the top */
-    align-items: center;
-    min-height: 100vh;
-    position: relative;
-    background-color: #1a1a1a; /* Fallback for black background */
+    flex-direction: column; /* Arrange header, main, footer vertically */
+    min-height: 100vh; /* Make body take full viewport height */
+    color: #e0e0e0;
 }
 
-.background-animation {
-    position: fixed;
+/* --- General Link Styling: ALL LINKS WILL BE GREEN --- */
+a {
+    color: #28a745; /* Green for all links */
+    text-decoration: none;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+a:hover {
+    color: #1e7e34; /* Darker green on hover */
+    text-decoration: underline;
+}
+
+/* --- Header Styling (Fixed at top) --- */
+.site-header {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Slightly transparent */
+    padding: 15px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.navbar-brand a {
+    color: #e0e0e0;
+    font-size: 1.8em;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.navbar-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav li {
+    margin-left: 25px;
+}
+
+.navbar-nav li a, .navbar-nav li span {
+    color: #e0e0e0;
+    text-decoration: none;
+    font-size: 1.1em;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav li a:hover {
+    color: #28a745; /* Green on hover */
+    text-decoration: none;
+}
+
+/* --- Main Content Area: Centering Logic for Login/Signup/Main Pages --- */
+.container { /* This now acts as the flexible area between header and footer */
+    flex-grow: 1; /* Allows this container to take up available vertical space */
+    display: flex; /* Make it a flex container */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    padding: 20px; /* Add some padding around the centered box if needed */
+    width: 100%; /* Ensure it spans full width */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* Auth Box Styling (Used for Home, Login, Signup, Main pages) */
+.auth-box {
+    width: 90%; /* Use a percentage for responsiveness */
+    max-width: 800px; /* Adjusted max-width for forms */
+    margin: 0; /* Flexbox handles centering, so no auto margin here */
+    background-color: #ffffff; /* All auth boxes are now white */
+    padding: 40px 30px; /* Increased padding for more substantial look */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    color: #333; /* Default text color inside white boxes */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.form-title {
+    color: #333; /* Dark title for white boxes */
+    margin-bottom: 25px;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333; /* Dark label for white boxes */
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    color: #333; /* Dark text for inputs in white boxes */
+    background-color: #fff; /* White background for inputs */
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* --- ALL BUTTONS: YELLOW WITH BLACK FONT --- */
+.btn-primary {
+    background-color: #ffc107;
+    color: #333;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #e0a800;
+}
+
+.alert {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+/* Carousel Styles */
+.carousel-container-fade {
+    width: 90%; /* Responsive width for carousel */
+    max-width: 900px; /* Max width for the carousel itself on home page */
+    height: 700px; /* Height to fit full image + title underneath */
+    margin: 30px auto;
+    background-color: #111; /* Dark background for carousel */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.movie-carousel-fade {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.movie-card-fade {
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
-    background: linear-gradient(45deg, #1a1a1a, #2b2b2b, #1a1a1a, #3c3c3c);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-}
-
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* Base container for all main content, helps with centering */
-.container {
-    position: relative;
-    z-index: 1;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
-    justify-content: flex-start; /* Align content to the top within container */
-    width: 100%;
-    padding: 20px;
+    text-align: center;
     box-sizing: border-box;
-    flex-grow: 1; /* Allow container to grow and push footer down */
-}
-
-/* Styles for authentication boxes (login, signup, welcome) */
-.auth-box {
-    background-color: rgba(255, 255, 255, 0.95); /* White box with slight transparency */
-    padding: 30px 40px;
-    border-radius: 10px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    width: 350px;
-    max-width: 90%; /* Responsive width */
-    margin: 20px auto; /* Centers the block element and adds vertical spacing */
-    text-align: left; /* Align text inside the box to the left */
-    color: #333; /* Default text color for auth-box content */
-}
-
-/* Styling for main headings within auth boxes */
-h1 {
-    color: #333; /* Darker color for text inside the white box */
-    text-align: center;
-    margin-bottom: 25px;
-    font-size: 1.8em;
-}
-
-/* Specific style for login/signup form titles to avoid conflict with home page H1 */
-.form-title {
-    color: #333;
-    text-align: center;
-    margin: 0 0 25px 0; /* Reset margin from general h1 */
-    font-size: 1.8em;
-}
-
-/* Styling for form labels */
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #555; /* Slightly lighter dark for labels */
-}
-
-/* Styling for various input types */
-input[type="text"],
-input[type="password"],
-input[type="email"],
-input[type="date"] {
-    width: calc(100% - 22px); /* Account for padding and border */
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box; /* Include padding/border in element's total width/height */
-    font-size: 1em; /* Make text readable */
-    color: #333; /* Ensure input text is dark */
-}
-
-/* Styling for submit buttons */
-input[type="submit"] {
-    background-color: #5cb85c;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.1em;
-    width: 100%;
-    transition: background-color 0.3s ease;
-}
-
-input[type="submit"]:hover {
-    background-color: #4cae4c;
-}
-
-/* Auth switch links */
-.auth-switch {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 0.9em;
-    color: #333; /* Sets the text color to dark gray */
-}
-
-.auth-switch a {
-    color: #5cb85c; /* Green color for links */
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.auth-switch a:hover {
-    text-decoration: underline;
-}
-
-/* Flash messages styling */
-/* Base.html's container for non-danger alerts */
-.flash-messages-container {
-    width: 100%;
-    max-width: 450px;
-    margin-top: 20px; /* Space from top */
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.alert {
+    background-color: #000;
     padding: 15px;
-    margin: 10px auto; /* Center alerts themselves */
-    border: 1px solid transparent;
-    border-radius: 4px;
-    font-weight: bold;
-    word-wrap: break-word;
-    max-width: 90%; /* Responsive width for alerts */
 }
 
-.alert-success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-}
-
-.alert-danger {
-    color: #721c24; /* Original dark red for generic danger messages */
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
-
-.alert-warning {
-    color: #856404;
-    background-color: #fff3cd;
-    border-color: #ffeeba;
-}
-
-.alert-info {
-    color: #0c5460;
-    background-color: #d1ecf1;
-    border-color: #bee5eb;
-}
-
-/* Login-specific error box styling (from login.html) */
-.login-error-box {
-    width: 100%;
-    box-sizing: border-box;
-    text-align: center;
-    color: #b30000; /* A stronger, darker red to ensure visibility */
-    background-color: #ffebee; /* Very light red background to contrast */
-    border: 1px solid #e57373; /* A more visible border */
-    padding: 12px;
-    border-radius: 5px;
-    margin-bottom: 15px; /* Space between the error box and the form title */
-}
-
-/* Welcome box specific styling */
-.welcome-box p {
-    font-size: 1.1em;
-    line-height: 1.6;
-    text-align: center;
-    color: #333;
-}
-.welcome-box a {
-    color: #d9534f;
-    text-decoration: none;
-    font-weight: bold;
-}
-.welcome-box a:hover {
-    text-decoration: underline;
-}
-
-/* Home Teaser Box Specific Styling */
-.home-teaser-box {
-    width: 800px; /* Wider box for the home page */
-    max-width: 95%; /* Responsive */
-    padding: 40px; /* More padding */
-    text-align: center; /* Center content within this box */
-}
-
-.home-teaser-box .teaser-text {
-    font-size: 1.1em;
-    margin-bottom: 30px;
-    color: #555;
-}
-
-/* Movie Carousel Grid */
-.movie-carousel-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Responsive grid for images */
-    gap: 15px; /* Space between images */
-    padding: 20px 0;
-    margin-bottom: 30px;
-    max-height: 400px; /* Limit height to create a "carousel" feel (will be scrollable) */
-    overflow-y: auto; /* Enable vertical scrolling */
-    overflow-x: hidden; /* Hide horizontal scrollbar */
-    border: 1px solid #eee; /* Light border around the carousel area */
-    border-radius: 8px;
-    background-color: rgba(0, 0, 0, 0.02); /* Very subtle dark background for carousel */
-}
-
-.movie-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-.movie-card img {
-    width: 100px; /* Fixed width for images */
-    height: 150px; /* Fixed height for consistent look */
-    object-fit: cover; /* Ensures images cover the area without distortion */
-    border-radius: 5px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease-in-out;
-}
-
-.movie-card img:hover {
-    transform: scale(1.05); /* Slight zoom on hover */
-}
-
-.movie-card .movie-title {
-    font-size: 0.8em;
-    color: #444; /* Slightly darker text for titles */
-    margin-top: 8px;
-    font-weight: bold;
-    word-wrap: break-word; /* Allow long titles to wrap */
-    max-width: 100px; /* Match image width */
-}
-
-/* Call to Action Box */
-.call-to-action-box {
-    background-color: #f0f8ff; /* Light blue background for CTA */
-    padding: 25px;
-    border-radius: 8px;
-    border: 1px solid #cceeff;
-    margin-top: 30px;
-    text-align: center;
-}
-
-.call-to-action-box h2 {
-    color: #2196F3; /* Blue for CTA heading */
+.movie-card-fade img {
+    max-width: 100%;
+    height: auto;
+    max-height: calc(100% - 100px); /* Ensure image leaves space for title below */
+    object-fit: contain;
+    border-radius: 10px;
+    display: block;
     margin-bottom: 15px;
-    font-size: 1.6em;
 }
 
-.call-to-action-box p {
-    color: #444;
-    margin-bottom: 20px;
-    line-height: 1.5;
-}
-
-.cta-button {
-    display: inline-block;
-    background-color: #2196F3; /* Bright blue for CTA button */
-    color: white;
-    padding: 12px 25px;
-    border-radius: 5px;
-    text-decoration: none;
+.movie-title-fade {
+    font-size: 2.2em;
     font-weight: bold;
-    font-size: 1.1em;
-    transition: background-color 0.3s ease;
+    color: #f8f8f8; /* Light text for movie titles */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.9);
+    white-space: normal;
+    word-wrap: break-word;
+    line-height: 1.2;
+    margin: 0;
+    padding: 0 10px;
 }
 
-.cta-button:hover {
-    background-color: #1976D2;
+
+/* Specific styles for forms within auth boxes to ensure good layout */
+#login-page .auth-box form,
+#signup-page .auth-box form {
+    margin: 0 auto;
+    max-width: 450px; /* Max width for the form itself inside the large box */
 }
 
-.already-member {
-    margin-top: 15px;
-    font-size: 0.9em;
-    color: #555;
+#login-page .auth-box .form-group {
+    text-align: center; /* Center labels and inputs visually within the form group */
 }
 
-.already-member a {
-    color: #5cb85c; /* Green for login link */
-    text-decoration: none;
-    font-weight: bold;
-}
-.already-member a:hover {
-    text-decoration: underline;
-}
-
-/* Footer Styling */
-.site-footer {
+#login-page .auth-box .form-group label,
+#signup-page .auth-box .form-group label {
+    text-align: center; /* Center the label text */
     width: 100%;
+}
+
+#login-page .auth-box .form-control,
+#signup-page .auth-box .form-control {
+    display: block;
+    margin: 0 auto; /* Center inputs */
+    max-width: 400px; /* Limit input width for readability */
+}
+
+/* Links within auth-boxes (green on white) */
+.auth-box .auth-link a,
+.auth-box .back-to-home a,
+#placeholder-main-page .auth-box p a { /* Targeting all links within auth-boxes */
+    color: #28a745; /* Green link for white boxes */
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.auth-box .auth-link a:hover,
+.auth-box .back-to-home a:hover,
+#placeholder-main-page .auth-box p a:hover {
+    color: #1e7e34; /* Darker green on hover */
+}
+
+/* --- Footer Styling --- */
+.site-footer {
     text-align: center;
     padding: 20px;
-    margin-top: 40px; /* Space from content above */
-    color: #888; /* Lighter grey for footer text */
-    font-size: 0.8em;
-    border-top: 1px solid rgba(255, 255, 255, 0.05); /* Subtle white line at the top */
-    position: relative; /* Ensure it stays at the bottom */
-    z-index: 1; /* Keep it above the background animation */
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #e9ecef;
+    font-size: 0.9em;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    width: 100%; /* Ensure footer spans full width */
 }

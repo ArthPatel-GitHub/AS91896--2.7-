@@ -1,31 +1,25 @@
 {% extends "base.html" %}
 
-{% block title %}Login - Movie App{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block content %}
-<div class="auth-box">
-    <h1 class="form-title">Movie Login</h1>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }} login-error-box" role="alert">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
-    <form method="POST" action="{{ url_for('login') }}">
-        <label for="identifier">Email or Phone Number:</label>
-        <input type="text" id="identifier" name="identifier" required placeholder="Your email or phone number" value="{{ identifier or '' }}">
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required placeholder="Your password">
-
-        <input type="submit" value="Login">
+{# This single auth-box will be centered by the .container flex properties #}
+<div class="auth-box" id="login-page">
+    <h1 class="form-title">Login to Your Account</h1>
+    <form method="POST">
+        <div class="form-group">
+            <label for="identifier">Email or Phone Number</label>
+            <input type="text" id="identifier" name="identifier" class="form-control"
+                   value="{{ identifier if identifier else '' }}"
+                   required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn-primary">Login</button>
     </form>
-
-    <p class="auth-switch">Don't have an account? <a href="{{ url_for('signup') }}">Sign Up here</a></p>
+    <p class="auth-link">Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
+    <p class="back-to-home"><a href="{{ url_for('home') }}">Back to Home Page</a></p>
 </div>
 {% endblock %}

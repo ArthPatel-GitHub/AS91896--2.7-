@@ -2,17 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Movie App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Movie Site{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    {% block content %}{% endblock %}
+    <header class="site-header">
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <a href="{{ url_for('home') }}">MyMovieSite</a> {# Added brand text for visibility #}
+            </div>
+            <ul class="navbar-nav">
+                {% if 'username' in session %}
+                    {# Display username as text, not a clickable link #}
+                    <li class="nav-item"><span>Hi, {{ session['username'] }}</span></li>
+                    {# Only one logout button in the nav #}
+                    <li class="nav-item"><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                    <li class="nav-item"><a href="{{ url_for('login') }}">Login</a></li>
+                    <li class="nav-item"><a href="{{ url_for('signup') }}">Sign Up</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    {# The main container is now a flex item to enable vertical centering of its content #}
+    <main class="container">
+        {# Flash Messages Display (Handled globally here) #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {# Position alerts absolutely so they don't interfere with main content centering #}
+                <div style="width: 100%; max-width: 800px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; position: absolute; top: 100px; left: 0; right: 0; z-index: 10;">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{# Content from child templates will go here #}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2025 My Movie Site. All rights reserved.</p>
+    </footer>
+
+    {% block scripts %}{# Optional: for page-specific JavaScript #}{% endblock %}
 </body>
 </html>

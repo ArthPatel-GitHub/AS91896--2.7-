@@ -1,36 +1,43 @@
 {% extends "base.html" %}
 
-{% block title %}Welcome to Movie App - Teaser{% endblock %}
+{% block title %}Welcome to My Movie Site{% endblock %}
 
 {% block content %}
-<div class="auth-box home-teaser-box"> {# Use auth-box for consistent styling #}
+<div class="auth-box home-teaser-box">
     <h1 class="form-title">Your Ultimate Movie Experience Awaits!</h1>
     <p class="teaser-text">
         Explore a world of blockbusters, indie gems, and timeless classics.
         Here's a sneak peek at some of the best movies we have:
     </p>
 
-    <div class="movie-carousel-grid">
-        {% for movie in movies %}
-        <div class="movie-card">
-            {# FINAL: Image source now uses url_for to find static files #}
-            <img src="{{ url_for('static', filename='images/movies/' + movie.image_filename) }}" alt="{{ movie.title }}">
-            <p class="movie-title">{{ movie.title }}</p>
+    {# Carousel Container for single-item fade effect #}
+    <div class="carousel-container-fade">
+        <div class="movie-carousel-fade" id="movieCarousel">
+            {% for movie in movies %}
+            <div class="movie-card-fade">
+                <img src="{{ url_for('static', filename='images/movies/' + movie.image_filename) }}" alt="{{ movie.title }}">
+                <p class="movie-title-fade">{{ movie.title }}</p>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 
-    <div class="call-to-action-box">
-        <h2>Unlock the Full Potential!</h2>
-        <p>Create an account to track your favorites, get personalized recommendations, and dive deeper into the world of cinema.</p>
-        <a href="{{ url_for('signup') }}" class="cta-button">Join Now - It's Free!</a>
-        <p class="already-member">Already a member? <a href="{{ url_for('login') }}">Log In</a></p>
+    {# HOOK, NEW LINE, AND BUTTONS SECTION #}
+    <p style="color: #333; font-size: 1.1em; margin-top: 30px;">
+        Ready to get started with your ultimate movie experience?
+    </p>
+    {# INTERESTING LINE MOVED HIGHER AND STYLED GREEN #}
+    <p style="color: #28a745; font-size: 1.3em; font-weight: bold; margin-top: 15px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">Login or Sign Up Below!</p>
+    <div style="margin-top: 20px;"> {# This margin ensures spacing between the text and buttons #}
+        <a href="{{ url_for('login') }}" class="btn-primary" style="margin-right: 10px;">Login</a>
+        <a href="{{ url_for('signup') }}" class="btn-primary">Sign Up</a>
     </div>
+
 </div>
 
-{# Footer - placed outside auth-box but still within the main content flow #}
-<footer class="site-footer">
-    <p>&copy; 2025 Your Name (Made by Your Name) | All Rights Reserved</p>
-</footer>
+{% endblock %}
 
+{% block scripts %}
+{# Link to JavaScript file for carousel #}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 {% endblock %}

@@ -1,31 +1,43 @@
 {% extends "base.html" %}
 
-{% block title %}Sign Up - Movie App{% endblock %}
+{% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<div class="auth-box">
-    <h1>Create Account</h1>
-    <form method="POST" action="{{ url_for('signup') }}">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required placeholder="e.g., MovieFan123" value="{{ username or '' }}">
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required placeholder="e.g., user@example.com" value="{{ email or '' }}">
-
-        <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob" name="dob" required value="{{ dob or '' }}">
-
-        <label for="phone">Phone Number (Optional):</label>
-        <input type="text" id="phone" name="phone" placeholder="e.g., +64211234567 or 0211234567" value="{{ phone or '' }}"> {# UPDATED PLACEHOLDER #}
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required placeholder="Min. 8 characters">
-
-        <label for="confirm_password">Confirm Password:</label>
-        <input type="password" id="confirm_password" name="confirm_password" required placeholder="Re-enter your password">
-
-        <input type="submit" value="Sign Up">
+{# This single auth-box will be centered by the .container flex properties #}
+<div class="auth-box" id="signup-page">
+    <h1 class="form-title">Create Your Account</h1>
+    <form method="POST">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" class="form-control"
+                   value="{{ form_data.username if form_data else '' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-control"
+                   value="{{ form_data.email if form_data else '' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <input type="date" id="dob" name="dob" class="form-control"
+                   value="{{ form_data.dob if form_data else '' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone Number (Optional)</label>
+            <input type="tel" id="phone" name="phone" class="form-control"
+                   value="{{ form_data.phone if form_data else '' }}">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn-primary">Sign Up</button>
     </form>
-    <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+    <p class="auth-link">Already a member? <a href="{{ url_for('login') }}">Log In</a></p>
+    <p class="back-to-home"><a href="{{ url_for('home') }}">Back to Home Page</a></p>
 </div>
 {% endblock %}

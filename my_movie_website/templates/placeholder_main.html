@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Main Content - Movie App{% endblock %}
+{% block title %}Main Page{% endblock %}
 
 {% block content %}
-<div class="auth-box">
-    <h1>Welcome, {{ username }}!</h1>
-    <p>You've unlocked the main content area.</p>
-    <p>This is where your full movie Browse, search, and personalized features will eventually go!</p>
-    <p style="margin-top: 20px;">For now, feel free to <a href="{{ url_for('logout') }}">Logout</a> or <a href="{{ url_for('account') }}">View Account</a>.</p>
+{# This single auth-box will be centered by the .container flex properties #}
+<div class="auth-box" id="placeholder-main-page">
+    <h1 class="form-title">Welcome to your Main Page, {{ username }}!</h1>
+    <p class="teaser-text">
+        This is your personalized content area.
+    </p>
+    <p><a href="{{ url_for('logout') }}">Logout</a></p>
 </div>
 {% endblock %}

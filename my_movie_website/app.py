@@ -17,8 +17,8 @@ USER_DB_NAME = 'login_information.db'
 user_db_path = os.path.join(basedir, 'database', USER_DB_NAME)
 user_db_uri = 'sqlite:///' + user_db_path
 
-# --- Database for Movies (RESTORED to original name) ---
-MOVIE_DB_NAME = 'movies_data.db' # <--- RESTORED: Back to 'movies_data.db'
+# --- Database for Movies ---
+MOVIE_DB_NAME = 'movies_data.db' 
 movie_db_path = os.path.join(basedir, 'database', MOVIE_DB_NAME)
 movie_db_uri = 'sqlite:///' + movie_db_path
 
@@ -87,7 +87,7 @@ with app.app_context():
             {'title': 'Arrival', 'image_filename': 'movie25.jpg'},
             {'title': 'Blade Runner 2049', 'image_filename': 'movie26.jpg'},
             {'title': 'Mad Max: Fury Road', 'image_filename': 'movie27.jpg'},
-            {'title': 'Schindler\'s List', 'image_filename': 'movie28.jpg'}, # Swapped!
+            {'title': "Schindler's List", 'image_filename': 'movie28.jpg'},
             {'title': 'Birdman', 'image_filename': 'movie29.jpg'},
             {'title': 'Hacksaw Ridge', 'image_filename': 'movie30.jpg'}
         ]
@@ -105,7 +105,7 @@ with app.app_context():
         print("DEBUG: 'movie' table not found in Movie DB. Something might be wrong with bind setup or create_all(bind_key='movies').")
 
 
-# --- Validation Helper Functions (No Change) ---
+# --- Validation Helper Functions ---
 
 def is_valid_email(email):
     """Basic regex for email validation."""
@@ -128,7 +128,7 @@ def is_valid_nz_phone(phone):
     
     return re.fullmatch(nz_phone_regex, cleaned_phone)
 
-# --- Routes (RESTORED for movie column names) ---
+# --- Routes ---
 
 @app.route('/')
 def index():
@@ -141,9 +141,6 @@ def home():
     if 'username' in session:
         return redirect(url_for('welcome'))
     movies = Movie.query.all()
-    # Debugging: Print fetched movie data
-    # for movie in movies:
-    #     print(f"DEBUG: Fetched movie: ID={movie.id}, Title={movie.title}, Image={movie.image_filename}")
     return render_template('home.html', movies=movies)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -271,15 +268,6 @@ def placeholder_main_page():
         flash('Please log in to access the main content.', 'warning')
         return redirect(url_for('home'))
     return render_template('placeholder_main.html', username=session['username'])
-
-@app.route('/account')
-def account():
-    if 'username' not in session:
-        flash('Please log in to access your account.', 'warning')
-        return redirect(url_for('login'))
-
-    user = User.query.filter_by(username=session['username']).first()
-    return render_template('account.html', user=user)
 
 @app.route('/logout')
 def logout():
