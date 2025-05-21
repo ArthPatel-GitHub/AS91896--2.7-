@@ -20,6 +20,8 @@
         <button type="submit" class="btn-primary">Login</button>
     </form>
     <p class="auth-link">Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
+    {# ADDED FORGOT PASSWORD LINK HERE #}
+    <p class="auth-link"><a href="{{ url_for('forgot_password_request') }}">Forgot your password?</a></p>
     <p class="back-to-home"><a href="{{ url_for('home') }}">Back to Home Page</a></p>
 </div>
 {% endblock %}
