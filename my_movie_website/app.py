@@ -1,71 +1,100 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
-import secrets # For generating simple reset codes (NOT for secure tokens in real apps without more context)
-import datetime # For handling code expiration
+import secrets
+import datetime
+from datetime import datetime as dt # Import datetime module specifically for current time
 
 # --- OPTIONAL: For loading environment variables from a .env file ---
-# If you created a .env file for email credentials, uncomment the next two lines:
 from dotenv import load_dotenv
 load_dotenv()
 
-# --- Flask-Mail Imports and Configuration (Requires installation: pip install Flask-Mail) ---
+# --- Flask-Mail Imports and Configuration ---
 from flask_mail import Mail, Message
 
+# --- Flask-SQLAlchemy Imports and Configuration ---
+from flask_sqlalchemy import SQLAlchemy
+
 app = Flask(__name__)
-# IMPORTANT: Replace with a strong, static secret key in production.
-# This is used for session management and flash messages.
 app.secret_key = os.urandom(24) 
 
 # --- Flask-Mail Configuration ---
-# IMPORTANT: Replace with your actual email server settings if not Gmail,
-# and ensure MAIL_USERNAME/MAIL_PASSWORD are set via environment variables.
-app.config['MAIL_SERVER'] = 'smtp.gmail.com' # Example for Gmail. Use your provider's SMTP server.
-app.config['MAIL_PORT'] = 587 # Typically 587 for TLS, or 465 for SSL.
-app.config['MAIL_USE_TLS'] = True # Set to False if using SSL (port 465)
-app.config['MAIL_USE_SSL'] = False # Set to True if using SSL (port 465)
-app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USER') # Get from environment variable (from your .env file)
-app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASS') # Get from environment variable (from your .env file / Gmail App Password!)
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('EMAIL_USER') # Your sending email address
-
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USER')
+app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASS')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('EMAIL_USER')
 mail = Mail(app)
 
-# --- Dummy User Database (In-memory list, NOT for production!) ---
-# In a real application, you would connect to a proper database (e.g., SQLAlchemy with SQLite/PostgreSQL).
-users = [] 
+# --- Flask-SQLAlchemy Database Configuration ---
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app) # Initialize the database object
 
-# --- Temporarily store password reset codes/tokens (NOT for production!) ---
-# In a real application, these would be stored in a database, associated with the user,
-# with expiration times, and should be single-use.
-# Format: {email: {'code': 'XXXXXX', 'expires_at': datetime_obj, 'reset_token': 'secure_token_for_step_3', 'used': False}}
+# --- Database User Model ---
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True) # Primary key, auto-increments
+    username = db.Column(db.String(20), unique=True, nullable=False) # UNIQUE USERNAME
+    email = db.Column(db.String(120), unique=True, nullable=False)    # UNIQUE EMAIL
+    dob = db.Column(db.String(10), nullable=False)
+    phone = db.Column(db.String(20), unique=True, nullable=True)     # OPTIONAL & NULLABLE PHONE
+    password = db.Column(db.String(60), nullable=False)              # NON-UNIQUE PASSWORD (HASHED)
+
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}')"
+
+# --- Temporarily store password reset codes/tokens (still in-memory for demo!) ---
 password_reset_codes = {}
 
 @app.route('/')
 def home():
-    # Example movie data for the carousel (replace with real data from a DB)
     movies = [
-        {'title': 'Movie Title 1', 'image_filename': 'movie1.jpg'},
-        {'title': 'Movie Title 2', 'image_filename': 'movie2.jpg'},
-        {'title': 'Movie Title 3', 'image_filename': 'movie3.jpg'},
-        {'title': 'Movie Title 4', 'image_filename': 'movie4.jpg'},
-        {'title': 'Movie Title 5', 'image_filename': 'movie5.jpg'}
+        {'title': 'The Shawshank Redemption', 'image_filename': 'movie1.jpg'},
+        {'title': 'The Godfather', 'image_filename': 'movie2.jpg'},
+        {'title': 'The Dark Knight', 'image_filename': 'movie3.jpg'},
+        {'title': 'Pulp Fiction', 'image_filename': 'movie4.jpg'},
+        {'title': 'The Lord of the Rings: The Return of the King', 'image_filename': 'movie5.jpg'},
+        {'title': 'Forrest Gump', 'image_filename': 'movie6.jpg'},
+        {'title': 'Inception', 'image_filename': 'movie7.jpg'},
+        {'title': 'The Matrix', 'image_filename': 'movie8.jpg'},
+        {'title': 'Goodfellas', 'image_filename': 'movie9.jpg'},
+        {'title': 'Spirited Away', 'image_filename': 'movie10.jpg'},
+        {'title': 'Interstellar', 'image_filename': 'movie11.jpg'},
+        {'title': 'Parasite', 'image_filename': 'movie12.jpg'},
+        {'title': 'Gladiator', 'image_filename': 'movie13.jpg'},
+        {'title': 'The Lion King', 'image_filename': 'movie14.jpg'},
+        {'title': 'Toy Story', 'image_filename': 'movie15.jpg'},
+        {'title': 'Django Unchained', 'image_filename': 'movie16.jpg'},
+        {'title': 'Inglourious Basterds', 'image_filename': 'movie17.jpg'},
+        {'title': 'The Prestige', 'image_filename': 'movie18.jpg'},
+        {'title': 'Saving Private Ryan', 'image_filename': 'movie19.jpg'},
+        {'title': 'Avatar', 'image_filename': 'movie20.jpg'},
+        {'title': 'Titanic', 'image_filename': 'movie21.jpg'},
+        {'title': 'Jurassic Park', 'image_filename': 'movie22.jpg'},
+        {'title': 'E.T. the Extra-Terrestrial', 'image_filename': 'movie23.jpg'},
+        {'title': 'Star Wars: A New Hope', 'image_filename': 'movie24.jpg'},
+        {'title': 'Back to the Future', 'image_filename': 'movie25.jpg'},
+        {'title': 'The Terminator', 'image_filename': 'movie26.jpg'},
+        {'title': 'Alien', 'image_filename': 'movie27.jpg'},
+        {'title': 'Blade Runner 2049', 'image_filename': 'movie28.jpg'},
+        {'title': "Schindler's List", 'image_filename': 'movie29.jpg'},
+        {'title': 'The Departed', 'image_filename': 'movie30.jpg'}
     ]
     return render_template('home.html', movies=movies)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        identifier = request.form['identifier'] # Can be email or phone
+        identifier = request.form['identifier'] 
         password = request.form['password']
 
-        user = None
-        for u in users:
-            if u['email'] == identifier or u.get('phone') == identifier:
-                user = u
-                break
+        user = User.query.filter((User.email == identifier) | (User.phone == identifier)).first()
 
-        if user and check_password_hash(user['password'], password):
-            session['username'] = user['username']
+        if user and check_password_hash(user.password, password): 
+            session['username'] = user.username
             flash('Logged in successfully!', 'success')
             return redirect(url_for('main_page'))
         else:
@@ -78,7 +107,7 @@ def signup():
         username = request.form['username']
         email = request.form['email']
         dob = request.form['dob']
-        phone = request.form.get('phone') # Optional
+        phone = request.form.get('phone') 
         password = request.form['password']
         confirm_password = request.form['confirm_password']
 
@@ -91,28 +120,38 @@ def signup():
             flash('Passwords do not match.', 'danger')
             return render_template('signup.html', form_data=request.form)
 
-        if len(password) < 6: # Minimum password length
+        if len(password) < 6: 
             flash('Password must be at least 6 characters long.', 'danger')
             return render_template('signup.html', form_data=request.form)
 
-        # Check if username or email already exists
-        for user in users:
-            if user['username'] == username:
-                flash('Username already taken.', 'danger')
-                return render_template('signup.html', form_data=request.form)
-            if user['email'] == email:
-                flash('Email already registered.', 'danger')
-                return render_template('signup.html', form_data=request.form)
+        # --- Check if username or email already exists in DATABASE (Ensures uniqueness) ---
+        existing_user_username = User.query.filter_by(username=username).first()
+        existing_user_email = User.query.filter_by(email=email).first()
+        
+        if existing_user_username:
+            flash('Username already taken.', 'danger')
+            return render_template('signup.html', form_data=request.form)
+        if existing_user_email:
+            flash('Email already registered.', 'danger')
+            return render_template('signup.html', form_data=request.form)
+        
+        # Check phone only if provided, and ensure it's unique if it exists
+        if phone and User.query.filter_by(phone=phone).first():
+            flash('Phone number already registered.', 'danger')
+            return render_template('signup.html', form_data=request.form)
+
 
         hashed_password = generate_password_hash(password)
-        new_user = {
-            'username': username,
-            'email': email,
-            'dob': dob,
-            'phone': phone,
-            'password': hashed_password
-        }
-        users.append(new_user)
+        
+        # --- Handle optional phone number: convert empty string to None ---
+        # This is the line that allows multiple users to omit a phone number
+        # without violating the UNIQUE constraint on the 'phone' column.
+        phone_to_save = phone if phone else None 
+        
+        new_user = User(username=username, email=email, dob=dob, phone=phone_to_save, password=hashed_password)
+        db.session.add(new_user) 
+        db.session.commit()      
+
         flash('Account created successfully! Please log in.', 'success')
         return redirect(url_for('login'))
     return render_template('signup.html')
@@ -130,34 +169,21 @@ def logout():
     flash('You have been logged out.', 'info')
     return redirect(url_for('home'))
 
-# --- NEW FORGOT PASSWORD ROUTES ---
+# --- FORGOT PASSWORD ROUTES ---
 
 @app.route('/forgot_password', methods=['GET', 'POST'])
 def forgot_password_request():
-    """
-    Step 1: User requests a password reset by providing their email.
-    A reset code is generated and emailed.
-    """
     if request.method == 'POST':
         email = request.form.get('email')
         
-        # In a real app, perform a database lookup for the email
-        user_exists = any(u['email'] == email for u in users) 
+        user = User.query.filter_by(email=email).first() 
 
-        if user_exists:
-            # --- SECURITY WARNING: Simplified token generation for demo ONLY ---
-            # In a real app, use a robust, cryptographically secure library like `itsdangerous`
-            # or a dedicated token management system. Store tokens securely in a database
-            # with proper expiration and single-use flags. Do NOT use simple integers/short strings.
-            reset_code = secrets.token_urlsafe(6) # Generates a random string (e.g., 'abc-123')
-            # For a 6-digit numeric code, you could generate: str(random.randint(100000, 999999))
+        if user:
+            reset_code = secrets.token_urlsafe(6)
+            expires_at = dt.now() + datetime.timedelta(minutes=15)
 
-            expires_at = datetime.datetime.now() + datetime.timedelta(minutes=15) # Code valid for 15 minutes
-
-            # Store the code temporarily (INSECURE FOR PROD: use DB!)
             password_reset_codes[email] = {'code': reset_code, 'expires_at': expires_at, 'used': False}
 
-            # --- EMAIL SENDING LOGIC ---
             try:
                 msg = Message("My Movie Site - Password Reset Request",
                               sender=app.config['MAIL_DEFAULT_SENDER'],
@@ -181,28 +207,21 @@ The My Movie Site Team
                 return redirect(url_for('forgot_password_verify', email=email))
             except Exception as e:
                 flash(f'Failed to send reset email. Please check your Flask-Mail configuration and environment variables (EMAIL_USER, EMAIL_PASS). Error: {e}', 'danger')
-                print(f"DEBUG: Email sending error: {e}") # For debugging on the server console
+                print(f"DEBUG: Email sending error: {e}")
         else:
-            # For security, always give a generic message to prevent email enumeration
             flash('If an account with that email exists, a password reset code has been sent.', 'info') 
-            # Still redirect to the verify page to maintain consistent flow
-            return redirect(url_for('forgot_password_verify', email=email)) # Pass email to verify page
+            return redirect(url_for('forgot_password_verify', email=email)) 
             
     return render_template('forgot_password_request.html')
 
 @app.route('/forgot_password/verify', methods=['GET', 'POST'])
 def forgot_password_verify():
-    """
-    Step 2: User enters the code received in their email.
-    If the code is correct and not expired, they are redirected to set a new password.
-    """
-    email_from_args = request.args.get('email') # Get email from URL query parameter (from previous step)
+    email_from_args = request.args.get('email') 
     
     if request.method == 'POST':
         code = request.form.get('code')
-        submitted_email = request.form.get('email') # Get email from hidden input in form
+        submitted_email = request.form.get('email')
 
-        # Ensure we have an email to check against
         if not submitted_email:
             flash('Invalid request. Please start the password reset process again.', 'danger')
             return redirect(url_for('forgot_password_request'))
@@ -211,32 +230,24 @@ def forgot_password_verify():
 
         if (code_data and 
             code_data['code'] == code and 
-            datetime.datetime.now() < code_data['expires_at'] and
-            code_data['used'] == False): # Check if code hasn't been used yet for *this step*
+            dt.now() < code_data['expires_at'] and
+            code_data['used'] == False):
             
-            # Code is correct and not expired. Generate a secure token for the next step (actual reset).
-            # This token is passed via the URL to the reset page and is different from the emailed code.
             reset_token_for_password = secrets.token_urlsafe(32) 
             
-            # Update the stored code to include this reset_token and mark it as used for *this verification*
-            # In a real app, this would update your database entry for the token
             password_reset_codes[submitted_email]['reset_token'] = reset_token_for_password
-            password_reset_codes[submitted_email]['used'] = True # Mark the emailed code as used for verification
+            password_reset_codes[submitted_email]['used'] = True 
 
             flash('Code verified. You can now set your new password.', 'success')
             return redirect(url_for('forgot_password_reset', token=reset_token_for_password))
         else:
             flash('Invalid, expired, or already used code. Please try again or request a new one.', 'danger')
-            # Optional: Clean up expired/invalid codes from the temporary storage (or DB)
             if submitted_email in password_reset_codes:
-                 # Only delete if it's genuinely invalid/expired or wrong code entered for valid email
-                 if code_data and (code_data['code'] != code or datetime.datetime.now() >= code_data['expires_at'] or code_data['used'] == True):
+                 if code_data and (code_data['code'] != code or dt.now() >= code_data['expires_at'] or code_data['used'] == True):
                      del password_reset_codes[submitted_email]
             
-            # Redirect back to the verify page with the original email to allow re-entry
             return render_template('forgot_password_verify.html', email=submitted_email)
 
-    # If it's a GET request, ensure email is present from previous redirect
     if not email_from_args:
         flash('Invalid request. Please start the password reset process again.', 'danger')
         return redirect(url_for('forgot_password_request'))
@@ -245,15 +256,9 @@ def forgot_password_verify():
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def forgot_password_reset(token):
-    """
-    Step 3: User sets their new password using the unique token.
-    """
-    # In a real app, look up the token in your database to find the associated user and ensure it's valid.
-    # The token should be single-use and time-limited.
     email_for_token = None
     for email, data in password_reset_codes.items():
-        # Check if the 'reset_token' matches and is not expired (using the 'expires_at' from the original code)
-        if data.get('reset_token') == token and datetime.datetime.now() < data.get('expires_at'):
+        if data.get('reset_token') == token and dt.now() < data.get('expires_at'):
             email_for_token = email
             break
 
@@ -273,45 +278,30 @@ def forgot_password_reset(token):
             flash('Passwords do not match.', 'danger')
             return render_template('forgot_password_reset.html', token=token)
 
-        # --- UPDATE USER PASSWORD IN DATABASE ---
-        # In a real application, you would:
-        # 1. Look up the user in your database using `email_for_token`.
-        # 2. Hash the `new_password` using generate_password_hash().
-        # 3. Update the user's password in the database.
-        # 4. CRITICAL: Invalidate (delete or mark as used) the reset `token` from your database to prevent reuse.
-        #    Here, we'll remove the entire entry from our dummy dictionary for simplicity after successful reset.
-        
-        user_found_and_updated = False
-        for user in users:
-            if user['email'] == email_for_token:
-                user['password'] = generate_password_hash(new_password)
-                user_found_and_updated = True
-                break
+        user = User.query.filter_by(email=email_for_token).first()
+        if user:
+            user.password = generate_password_hash(new_password)
+            db.session.commit() 
 
-        if user_found_and_updated:
-            # IMPORTANT: After successful password reset, invalidate the token/code
             if email_for_token in password_reset_codes:
                 del password_reset_codes[email_for_token] 
 
             flash('Your password has been reset successfully! Please log in with your new password.', 'success')
             return redirect(url_for('login'))
         else:
-            flash('Error resetting password. User not found or token issue.', 'danger')
+            flash('Error resetting password. User not found.', 'danger')
             return render_template('forgot_password_reset.html', token=token)
 
     return render_template('forgot_password_reset.html', token=token)
 
 if __name__ == '__main__':
-    # Initial dummy user for testing if the users list is empty
-    # This user (test@example.com / password123) will exist only if app.py starts with no users.
-    if not users:
-        users.append({
-            'username': 'testuser',
-            'email': 'test@example.com',
-            'dob': '2000-01-01',
-            'phone': None,
-            'password': generate_password_hash('password123')
-        })
-        print("DEBUG: Dummy user 'testuser' (test@example.com / password123) added for testing.")
+    with app.app_context():
+        db.create_all()
+        if not User.query.filter_by(email='test@example.com').first():
+            test_user = User(username='testuser', email='test@example.com', dob='2000-01-01', phone=None,
+                             password=generate_password_hash('password123'))
+            db.session.add(test_user)
+            db.session.commit()
+            print("DEBUG: Default test user 'test@example.com' added to database.")
 
-    app.run(debug=True) # Run in debug mode during development
+    app.run(debug=True)
